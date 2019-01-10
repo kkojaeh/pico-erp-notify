@@ -36,6 +36,8 @@ public interface NotifyTypeRequests {
 
     boolean enabled;
 
+    boolean multipleSend;
+
   }
 
   @Data

@@ -1,18 +1,24 @@
 package pico.erp.notify.sender;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.val;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.notify.sender.NotifySenderRequests.SendRequest;
+import pico.erp.notify.sender.NotifySenderRequests.SendGroupRequest;
 import pico.erp.shared.Public;
 
 @Service
 @Public
 @Validated
-public class NotifySenderServiceLogic implements NotifySenderService {
+public class NotifySenderServiceLogic implements NotifySenderService, InitializingBean {
+
+  private final Map<NotifySenderId, NotifySenderDefinition> mapping = new HashMap<>();
 
   @Autowired
   @Lazy
@@ -22,26 +28,43 @@ public class NotifySenderServiceLogic implements NotifySenderService {
   private NotifySenderMapper mapper;
 
   @Override
+  public void afterPropertiesSet() throws Exception {
+    mapping.putAll(
+      definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))
+    );
+  }
+
+  @Override
   public boolean exists(NotifySenderId id) {
-    return definitions.stream()
-      .anyMatch(d -> d.getId().equals(id));
+    return mapping.containsKey(id);
   }
 
   @Override
   public NotifySenderData get(NotifySenderId id) {
-    return definitions.stream()
-      .filter(d -> d.getId().equals(id))
-      .findAny()
-      .map(mapper::map)
-      .orElseThrow(NotifySenderExceptions.NotFoundException::new);
+    if (mapping.containsKey(id)) {
+      return mapper.map(mapping.get(id));
+    } else {
+      throw new NotifySenderExceptions.NotFoundException();
+    }
   }
 
   @Override
-  public boolean send(SendRequest request) {
-    val definition = definitions.stream()
-      .filter(d -> d.getId().equals(request.getId()))
-      .findAny()
-      .orElseThrow(NotifySenderExceptions.NotFoundException::new);
-    return definition.send(request.getMessage(), request.getTargets());
+  public boolean send(NotifySenderRequests.SendTargetRequest request) {
+    val id = request.getId();
+    if (mapping.containsKey(id)) {
+      return mapping.get(id).send(request.getMessage(), request.getTarget());
+    } else {
+      throw new NotifySenderExceptions.NotFoundException();
+    }
+  }
+
+  @Override
+  public boolean send(SendGroupRequest request) {
+    val id = request.getId();
+    if (mapping.containsKey(id)) {
+      return mapping.get(id).send(request.getMessage(), request.getGroup());
+    } else {
+      throw new NotifySenderExceptions.NotFoundException();
+    }
   }
 }

@@ -19,7 +19,7 @@ import pico.erp.notify.sender.NotifySenderId;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Builder(toBuilder = true)
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotifyType implements Serializable {
 
@@ -33,6 +33,8 @@ public class NotifyType implements Serializable {
 
   boolean enabled;
 
+  boolean multipleSend;
+
   List<NotifySenderId> senders;
 
   public NotifyTypeMessages.Create.Response apply(
@@ -40,6 +42,7 @@ public class NotifyType implements Serializable {
     this.id = request.getId();
     this.name = request.getName();
     this.enabled = false;
+    this.multipleSend = false;
     this.senders = Collections.emptyList();
     return new NotifyTypeMessages.Create.Response(
       Arrays.asList(new NotifyTypeEvents.CreatedEvent(id))
@@ -51,6 +54,7 @@ public class NotifyType implements Serializable {
     this.name = request.getName();
     this.markdownTemplate = request.getMarkdownTemplate();
     this.enabled = request.isEnabled();
+    this.multipleSend = request.isMultipleSend();
     this.senders = request.getSenders();
     return new NotifyTypeMessages.Update.Response(
       Arrays.asList(new NotifyTypeEvents.UpdatedEvent(id))

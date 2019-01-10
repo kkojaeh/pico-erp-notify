@@ -11,8 +11,6 @@ public interface NotifySubjectService {
 
   NotifySubjectData get(@Valid @NotNull NotifySubjectId id);
 
-  void initialize();
-
   void update(@Valid @NotNull NotifySubjectRequests.UpdateRequest request);
 
 

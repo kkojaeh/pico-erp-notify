@@ -9,7 +9,9 @@ public interface NotifySenderService {
 
   NotifySenderData get(@Valid @NotNull NotifySenderId id);
 
-  boolean send(NotifySenderRequests.SendRequest request);
+  boolean send(NotifySenderRequests.SendTargetRequest request);
+
+  boolean send(NotifySenderRequests.SendGroupRequest request);
 
 
 }

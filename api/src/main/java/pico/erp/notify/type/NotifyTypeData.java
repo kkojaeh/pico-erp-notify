@@ -16,6 +16,8 @@ public class NotifyTypeData {
 
   String markdownTemplate;
 
+  boolean multipleSend;
+
   boolean enabled;
 
   List<NotifySenderId> senders;

@@ -8,7 +8,7 @@ import org.mapstruct.Mappings;
 @Mapper
 public abstract class NotifySubjectMapper {
 
-  protected NotifySubject jpa(NotifySubjectEntity entity) {
+  public NotifySubject jpa(NotifySubjectEntity entity) {
     return NotifySubject.builder()
       .id(entity.getId())
       .watchers(entity.getWatchers())

@@ -25,6 +25,7 @@ create table not_notify_type (
 	last_modified_by_name varchar(50),
 	last_modified_date datetime,
 	markdown_template longtext,
+	multiple_send bit not null,
 	name varchar(50),
 	primary key (id)
 ) engine=InnoDB;

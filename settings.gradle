@@ -2,4 +2,5 @@ rootProject.name = 'pico-erp-notify'
 include 'api'
 include 'impl'
 include 'test'
+include 'mattermost'
 

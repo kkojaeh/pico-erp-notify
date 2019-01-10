@@ -8,12 +8,13 @@ import org.mapstruct.Mappings;
 @Mapper
 public abstract class NotifyTypeMapper {
 
-  protected NotifyType jpa(NotifyTypeEntity entity) {
+  public NotifyType jpa(NotifyTypeEntity entity) {
     return NotifyType.builder()
       .id(entity.getId())
       .name(entity.getName())
       .markdownTemplate(entity.getMarkdownTemplate())
       .enabled(entity.isEnabled())
+      .multipleSend(entity.isMultipleSend())
       .senders(entity.getSenders())
       .build();
   }

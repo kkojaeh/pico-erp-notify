@@ -9,6 +9,8 @@ public interface NotifyTargetService {
 
   NotifyTargetData get(@NotNull UserId userId);
 
+  NotifyGroupData get(@NotNull GroupId groupId);
+
   Collection<NotifyTargetData> getAll(@NotNull GroupId groupId);
 
 

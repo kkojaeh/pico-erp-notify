@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
@@ -12,6 +11,7 @@ import pico.erp.notify.message.NotifyMessage
 import pico.erp.notify.sender.NotifySenderDefinition
 import pico.erp.notify.sender.NotifySenderId
 import pico.erp.notify.subject.NotifySubjectId
+import pico.erp.notify.target.NotifyGroupData
 import pico.erp.notify.target.NotifyTargetData
 import pico.erp.notify.type.NotifyTypeDefinition
 import pico.erp.notify.type.NotifyTypeId
@@ -20,8 +20,6 @@ import pico.erp.notify.type.NotifyTypeService
 import pico.erp.shared.IntegrationConfiguration
 import pico.erp.user.UserId
 import spock.lang.Specification
-
-import java.util.stream.Stream
 
 @SpringBootTest(classes = [IntegrationConfiguration])
 @Transactional
@@ -59,6 +57,8 @@ class NotifyServiceSpec extends Specification {
 
   class TestNotifySenderDefinition implements NotifySenderDefinition {
 
+    boolean targetSent = false;
+
     @Override
     NotifySenderId getId() {
       return senderId
@@ -70,15 +70,18 @@ class NotifyServiceSpec extends Specification {
     }
 
     @Override
-    boolean send(NotifyMessage message, Collection<NotifyTargetData> targets) {
+    boolean send(NotifyMessage message, NotifyGroupData group) {
+      println(message.asMarkdown())
+      return false
+    }
+
+    @Override
+    boolean send(NotifyMessage message, NotifyTargetData target) {
+      targetSent = true;
       println(message.asMarkdown())
       return true
     }
   }
-
-  @Lazy
-  @Autowired
-  TestNotifySenderDefinition testNotifySenderDefinition
 
   @Autowired
   NotifyTypeService notifyTypeService

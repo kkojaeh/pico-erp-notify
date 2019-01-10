@@ -12,14 +12,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NotifyTargetData {
+public class NotifyGroupData {
 
   NotifyTargetId id;
 
   String name;
-
-  String mobilePhoneNumber;
-
-  String email;
 
 }

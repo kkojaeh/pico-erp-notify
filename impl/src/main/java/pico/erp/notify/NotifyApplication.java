@@ -2,9 +2,10 @@ package pico.erp.notify;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
-import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +18,7 @@ import pico.erp.shared.Public;
 import pico.erp.shared.SpringBootConfigs;
 import pico.erp.shared.data.Role;
 import pico.erp.shared.impl.ApplicationImpl;
+import pico.erp.user.UserApi;
 
 @Slf4j
 @SpringBootConfigs
@@ -43,7 +45,7 @@ public class NotifyApplication implements ApplicationStarter {
 
   @Override
   public Set<ApplicationId> getDependencies() {
-    return Collections.emptySet();
+    return Stream.of(UserApi.ID).collect(Collectors.toSet());
   }
 
   @Override

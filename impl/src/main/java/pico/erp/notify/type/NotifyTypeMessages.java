@@ -61,6 +61,8 @@ public interface NotifyTypeMessages {
 
       boolean enabled;
 
+      boolean multipleSend;
+
     }
 
     @Value

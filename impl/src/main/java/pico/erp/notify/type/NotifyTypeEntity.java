@@ -66,6 +66,8 @@ public class NotifyTypeEntity implements Serializable {
 
   boolean enabled;
 
+  boolean multipleSend;
+
   @ElementCollection(fetch = FetchType.LAZY)
   @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
   @AttributeOverrides({

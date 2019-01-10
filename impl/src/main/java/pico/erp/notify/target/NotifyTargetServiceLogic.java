@@ -12,6 +12,7 @@ import pico.erp.user.UserId;
 import pico.erp.user.UserService;
 import pico.erp.user.group.GroupId;
 import pico.erp.user.group.GroupQuery;
+import pico.erp.user.group.GroupService;
 
 @Service
 @Public
@@ -26,6 +27,10 @@ public class NotifyTargetServiceLogic implements NotifyTargetService {
   @Autowired
   private GroupQuery groupQuery;
 
+  @Lazy
+  @Autowired
+  private GroupService groupService;
+
   @Autowired
   private NotifyTargetMapper mapper;
 
@@ -33,6 +38,15 @@ public class NotifyTargetServiceLogic implements NotifyTargetService {
   public NotifyTargetData get(UserId userId) {
     try {
       return mapper.map(userService.get(userId));
+    } catch (UserExceptions.NotFoundException e) {
+      return null;
+    }
+  }
+
+  @Override
+  public NotifyGroupData get(GroupId groupId) {
+    try {
+      return mapper.map(groupService.get(groupId));
     } catch (UserExceptions.NotFoundException e) {
       return null;
     }

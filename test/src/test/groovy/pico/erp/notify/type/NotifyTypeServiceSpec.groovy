@@ -45,6 +45,7 @@ class NotifyTypeServiceSpec extends Specification {
         name: name,
         markdownTemplate: markdownTemplate,
         senders: [],
+        multipleSend: true,
         enabled: true
       )
     )
@@ -65,11 +66,15 @@ class NotifyTypeServiceSpec extends Specification {
 
   def "조회 - 정의된 타입 확인"() {
     when:
+    template()
     def type = notifyTypeService.get(id)
 
     then:
     type.id == id
     type.name == name
+    type.markdownTemplate == markdownTemplate
+    type.multipleSend == true
+    type.enabled == true
   }
 
   def "컴파일 - 템플릿 지정 전"() {

@@ -1,6 +1,7 @@
 package pico.erp.notify.subject;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,5 +27,22 @@ public class NotifySubject implements Serializable {
   NotifySubjectId id;
 
   Set<UserId> watchers;
+
+  public NotifySubjectMessages.Create.Response apply(
+    NotifySubjectMessages.Create.Request request) {
+    this.id = request.getId();
+    this.watchers = request.getWatchers();
+    return new NotifySubjectMessages.Create.Response(
+      Arrays.asList(new NotifySubjectEvents.CreatedEvent(id))
+    );
+  }
+
+  public NotifySubjectMessages.Update.Response apply(
+    NotifySubjectMessages.Update.Request request) {
+    this.watchers = request.getWatchers();
+    return new NotifySubjectMessages.Update.Response(
+      Arrays.asList(new NotifySubjectEvents.UpdatedEvent(id))
+    );
+  }
 
 }
