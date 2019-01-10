@@ -43,7 +43,7 @@ public class MattermostNotifySenderDefinition implements NotifySenderDefinition 
   private String getUserIdByEmail(String email) {
     ApiResponse<User> userResponse = client.getUserByEmail(email);
     User user = userResponse.readEntity();
-    if (!user.getEmail().equals(email)) {
+    if (!email.equals(user.getEmail())) {
       return null;
     }
     return user.getId();
@@ -84,13 +84,12 @@ public class MattermostNotifySenderDefinition implements NotifySenderDefinition 
 
   @Override
   public boolean send(NotifyMessage message, NotifyGroupData group) {
-    val channelName = groupChannelNames.get(group.getId().getValue());
-    if (channelName == null) {
-      return false;
-    }
+    val groupId = group.getId().getValue();
+    val channelName =
+      groupChannelNames.containsKey(groupId) ? groupChannelNames.get(groupId) : groupId;
     ApiResponse<Channel> channelResponse = client.getChannelByName(channelName, teamId);
     Channel channel = channelResponse.readEntity();
-    if (!channel.getName().equals(channelName)) {
+    if (!channelName.equals(channel.getName())) {
       return false;
     }
     Post post = new Post();
@@ -99,6 +98,5 @@ public class MattermostNotifySenderDefinition implements NotifySenderDefinition 
     client.createPost(post);
     return true;
   }
-
 
 }
