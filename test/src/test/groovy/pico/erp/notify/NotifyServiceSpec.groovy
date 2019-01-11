@@ -11,6 +11,8 @@ import pico.erp.notify.message.NotifyMessage
 import pico.erp.notify.sender.NotifySenderDefinition
 import pico.erp.notify.sender.NotifySenderId
 import pico.erp.notify.subject.NotifySubjectId
+import pico.erp.notify.subject.type.NotifySubjectTypeDefinition
+import pico.erp.notify.subject.type.NotifySubjectTypeId
 import pico.erp.notify.target.NotifyGroupData
 import pico.erp.notify.target.NotifyTargetData
 import pico.erp.notify.type.NotifyTypeDefinition
@@ -30,6 +32,8 @@ class NotifyServiceSpec extends Specification {
 
   static def typeId = NotifyTypeId.from("test")
 
+  static def subjectTypeId = NotifySubjectTypeId.from("test")
+
   static def typeName = "테스트 타입"
 
   static def markdownTemplate = """{{name}} Hello"""
@@ -44,10 +48,26 @@ class NotifyServiceSpec extends Specification {
 
   @Bean
   NotifyTypeDefinition testNotifyTypeDefinition() {
-    return new NotifyTypeDefinition.NotifyTypeDefinitionImpl(
-      typeId, typeName, {
+
+    return NotifyTypeDefinition.Impl.builder()
+      .id(typeId)
+      .subjectTypeId(subjectTypeId)
+      .name(typeName)
+      .creator({
       k -> [name: "테스트"]
     })
+      .build()
+  }
+
+  @Bean
+  NotifySubjectTypeDefinition testNotifySubjectTypeDefinition() {
+    return NotifySubjectTypeDefinition.Impl.builder()
+      .id(subjectTypeId)
+      .name("테스트")
+      .converter({
+      k -> NotifySubjectId.from(subjectTypeId, k)
+    })
+      .build()
   }
 
   @Bean
@@ -107,7 +127,6 @@ class NotifyServiceSpec extends Specification {
     notifyService.notify(
       new NotifyRequests.NotifyUserRequest(
         typeId: typeId,
-        subjectId: subjectId,
         key: key,
         userId: userId
       )

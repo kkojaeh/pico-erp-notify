@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.notify.message.NotifyMessage;
 import pico.erp.notify.message.NotifyMessageMustache;
+import pico.erp.notify.subject.type.NotifySubjectTypeService;
 import pico.erp.notify.type.NotifyTypeRequests.CompileRequest;
 import pico.erp.notify.type.NotifyTypeRequests.UpdateRequest;
 import pico.erp.shared.ApplicationInitializer;
@@ -46,6 +47,9 @@ public class NotifyTypeServiceLogic implements NotifyTypeService, ApplicationIni
 
   @Autowired
   private MustacheFactory mustacheFactory;
+
+  @Autowired
+  private NotifySubjectTypeService subjectTypeService;
 
   @SneakyThrows
   @Override
@@ -86,6 +90,7 @@ public class NotifyTypeServiceLogic implements NotifyTypeService, ApplicationIni
       val notifyType = new NotifyType();
       val request = NotifyTypeMessages.Create.Request.builder()
         .id(definition.getId())
+        .subjectType(subjectTypeService.get(definition.getSubjectTypeId()))
         .name(definition.getName())
         .build();
       val response = notifyType.apply(request);

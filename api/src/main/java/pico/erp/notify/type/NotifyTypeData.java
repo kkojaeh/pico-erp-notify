@@ -5,12 +5,15 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import pico.erp.notify.sender.NotifySenderId;
+import pico.erp.notify.subject.type.NotifySubjectTypeId;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotifyTypeData {
 
   NotifyTypeId id;
+
+  NotifySubjectTypeId subjectTypeId;
 
   String name;
 

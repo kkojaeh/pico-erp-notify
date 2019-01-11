@@ -3,7 +3,6 @@ package pico.erp.notify.sender;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.io.Serializable;
-import java.util.UUID;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -36,8 +35,5 @@ public class NotifySenderId implements Serializable {
     return new NotifySenderId(value);
   }
 
-  public static NotifySenderId generate() {
-    return from(UUID.randomUUID().toString());
-  }
 
 }

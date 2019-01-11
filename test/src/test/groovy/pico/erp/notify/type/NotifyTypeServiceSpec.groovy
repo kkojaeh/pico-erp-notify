@@ -2,11 +2,11 @@ package pico.erp.notify.type
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import pico.erp.notify.subject.type.NotifySubjectTypeId
 import pico.erp.shared.IntegrationConfiguration
 import spock.lang.Specification
 
@@ -20,19 +20,36 @@ class NotifyTypeServiceSpec extends Specification {
 
   static def id = NotifyTypeId.from("test")
 
+  static def subjectTypeId = NotifySubjectTypeId.from("test")
+
   static def name = "테스트 타입"
 
   static def markdownTemplate = """{{name}} Hello"""
 
   static def key = "test-key"
 
-  @Bean
+  /*@Bean
   NotifyTypeDefinition testNotifyTypeDefinition() {
-    return new NotifyTypeDefinition.NotifyTypeDefinitionImpl(
-      id, name, {
+    return NotifyTypeDefinition.Impl.builder()
+    .id(id)
+    .subjectTypeId(subjectTypeId)
+    .name(name)
+    .creator({
       k -> [name: "테스트"]
     })
+    .build()
   }
+
+  @Bean
+  NotifySubjectTypeDefinition testNotifySubjectTypeDefinition() {
+    return NotifySubjectTypeDefinition.Impl.builder()
+      .id(subjectTypeId)
+      .name("테스트")
+      .converter({
+      k -> NotifySubjectId.from(subjectTypeId, k)
+    })
+      .build()
+  }*/
 
   @Autowired
   NotifyTypeService notifyTypeService

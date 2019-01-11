@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import pico.erp.notify.sender.NotifySenderId;
+import pico.erp.notify.subject.type.NotifySubjectTypeData;
 
 @ToString
 @Getter
@@ -27,6 +28,8 @@ public class NotifyType implements Serializable {
 
   NotifyTypeId id;
 
+  NotifySubjectTypeData subjectType;
+
   String name;
 
   String markdownTemplate;
@@ -40,6 +43,7 @@ public class NotifyType implements Serializable {
   public NotifyTypeMessages.Create.Response apply(
     NotifyTypeMessages.Create.Request request) {
     this.id = request.getId();
+    this.subjectType = request.getSubjectType();
     this.name = request.getName();
     this.enabled = false;
     this.multipleSend = false;

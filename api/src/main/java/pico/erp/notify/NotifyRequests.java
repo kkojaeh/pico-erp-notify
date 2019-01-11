@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pico.erp.notify.subject.NotifySubjectId;
 import pico.erp.notify.type.NotifyTypeId;
 import pico.erp.user.UserId;
 import pico.erp.user.group.GroupId;
@@ -22,10 +21,6 @@ public interface NotifyRequests {
     @Valid
     @NotNull
     NotifyTypeId typeId;
-
-    @Valid
-    @NotNull
-    NotifySubjectId subjectId;
 
     @Valid
     @NotNull
@@ -46,10 +41,6 @@ public interface NotifyRequests {
     @Valid
     @NotNull
     NotifyTypeId typeId;
-
-    @Valid
-    @NotNull
-    NotifySubjectId subjectId;
 
     @Valid
     @NotNull

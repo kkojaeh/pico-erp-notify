@@ -33,6 +33,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pico.erp.notify.sender.NotifySenderId;
+import pico.erp.notify.subject.type.NotifySubjectTypeId;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Auditor;
 
@@ -56,6 +57,11 @@ public class NotifyTypeEntity implements Serializable {
     @AttributeOverride(name = "value", column = @Column(name = "ID", length = TypeDefinitions.ID_LENGTH))
   })
   NotifyTypeId id;
+
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "SUBJECT_TYPE_ID", length = TypeDefinitions.ID_LENGTH))
+  })
+  NotifySubjectTypeId subjectTypeId;
 
   @Column(length = TypeDefinitions.NAME_LENGTH)
   String name;

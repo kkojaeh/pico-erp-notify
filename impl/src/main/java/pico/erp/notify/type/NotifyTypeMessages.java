@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 import pico.erp.notify.sender.NotifySenderId;
+import pico.erp.notify.subject.type.NotifySubjectTypeData;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.event.Event;
 
@@ -27,6 +28,9 @@ public interface NotifyTypeMessages {
       @Valid
       @NotNull
       NotifyTypeId id;
+
+      @NotNull
+      NotifySubjectTypeData subjectType;
 
       @NotNull
       @Size(max = TypeDefinitions.NAME_LENGTH)

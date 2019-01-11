@@ -50,7 +50,7 @@ public class NotifySubjectEntity implements Serializable {
 
   @EmbeddedId
   @AttributeOverrides({
-    @AttributeOverride(name = "value", column = @Column(name = "ID", length = TypeDefinitions.UUID_BINARY_LENGTH))
+    @AttributeOverride(name = "value", column = @Column(name = "ID", length = TypeDefinitions.EXTERNAL_ID_LENGTH))
   })
   NotifySubjectId id;
 

@@ -19,6 +19,8 @@ import pico.erp.notify.sender.NotifySenderRequests;
 import pico.erp.notify.sender.NotifySenderService;
 import pico.erp.notify.subject.NotifySubjectId;
 import pico.erp.notify.subject.NotifySubjectService;
+import pico.erp.notify.subject.type.NotifySubjectTypeRequests;
+import pico.erp.notify.subject.type.NotifySubjectTypeService;
 import pico.erp.notify.target.NotifyGroupData;
 import pico.erp.notify.target.NotifyTargetData;
 import pico.erp.notify.target.NotifyTargetService;
@@ -48,6 +50,10 @@ public class NotifyServiceLogic implements NotifyService {
   @Autowired
   private NotifySenderService senderService;
 
+
+  @Autowired
+  private NotifySubjectTypeService subjectTypeService;
+
   private NotifyGroupData group(GroupId groupId) {
     return targetService.get(groupId);
   }
@@ -63,9 +69,13 @@ public class NotifyServiceLogic implements NotifyService {
 
   @Override
   public void notify(NotifyUserRequest request) {
+    val key = request.getKey();
     val type = notifyTypeService.get(request.getTypeId());
-    val message = message(request.getTypeId(), request.getKey());
-    val targets = targets(request.getUserId(), request.getSubjectId());
+    val subjectId = subjectTypeService.convert(
+      new NotifySubjectTypeRequests.ConvertRequest(type.getSubjectTypeId(), key)
+    );
+    val message = message(request.getTypeId(), key);
+    val targets = targets(request.getUserId(), subjectId);
     val senders = type.getSenders();
     send(type, targets, senders, message);
 
@@ -73,8 +83,12 @@ public class NotifyServiceLogic implements NotifyService {
 
   @Override
   public void notify(NotifyGroupRequest request) {
+    val key = request.getKey();
     val type = notifyTypeService.get(request.getTypeId());
-    val message = message(request.getTypeId(), request.getKey());
+    val subjectId = subjectTypeService.convert(
+      new NotifySubjectTypeRequests.ConvertRequest(type.getSubjectTypeId(), key)
+    );
+    val message = message(request.getTypeId(), key);
     val group = group(request.getGroupId());
     val groupSenders = new LinkedList<NotifySenderId>(type.getSenders());
     val targetSenders = new LinkedList<NotifySenderId>();
@@ -102,7 +116,7 @@ public class NotifyServiceLogic implements NotifyService {
       }
     }
     val targets = new LinkedList<NotifyTargetData>(
-      targets(request.getGroupId(), request.getSubjectId()));
+      targets(request.getGroupId(), subjectId));
 
     send(type, targets, targetSenders, message);
   }
