@@ -1,5 +1,5 @@
 create table not_notify_subject (
-	id binary(16) not null,
+	id varchar(100) not null,
 	created_by_id varchar(50),
 	created_by_name varchar(50),
 	created_date datetime,
@@ -10,7 +10,7 @@ create table not_notify_subject (
 ) engine=InnoDB;
 
 create table not_notify_subject_watcher (
-	subject_id binary(16) not null,
+	subject_id varchar(100) not null,
 	user_id varchar(50) not null,
 	primary key (subject_id,user_id)
 ) engine=InnoDB;
@@ -27,6 +27,7 @@ create table not_notify_type (
 	markdown_template longtext,
 	multiple_send bit not null,
 	name varchar(50),
+	subject_type_id varchar(50),
 	primary key (id)
 ) engine=InnoDB;
 
