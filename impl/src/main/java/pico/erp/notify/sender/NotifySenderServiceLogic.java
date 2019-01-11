@@ -42,6 +42,13 @@ public class NotifySenderServiceLogic implements NotifySenderService, Applicatio
   }
 
   @Override
+  public List<NotifySenderData> getAll() {
+    return definitions.stream()
+      .map(mapper::map)
+      .collect(Collectors.toList());
+  }
+
+  @Override
   public void initialize() {
     mapping.putAll(
       definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))

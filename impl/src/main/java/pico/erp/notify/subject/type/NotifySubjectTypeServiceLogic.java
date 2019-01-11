@@ -55,6 +55,13 @@ public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService,
   }
 
   @Override
+  public List<NotifySubjectTypeData> getAll() {
+    return definitions.stream()
+      .map(mapper::map)
+      .collect(Collectors.toList());
+  }
+
+  @Override
   public void initialize() {
     mapping.putAll(
       definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))
