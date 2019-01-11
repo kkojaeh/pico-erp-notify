@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.val;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -13,12 +12,14 @@ import org.springframework.validation.annotation.Validated;
 import pico.erp.notify.sender.NotifySenderExceptions;
 import pico.erp.notify.subject.NotifySubjectId;
 import pico.erp.notify.subject.type.NotifySubjectTypeRequests.ConvertRequest;
+import pico.erp.shared.ApplicationInitializer;
 import pico.erp.shared.Public;
 
 @Service
 @Public
 @Validated
-public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService, InitializingBean {
+public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService,
+  ApplicationInitializer {
 
   private final Map<NotifySubjectTypeId, NotifySubjectTypeDefinition> mapping = new HashMap<>();
 
@@ -28,13 +29,6 @@ public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService, 
 
   @Autowired
   private NotifySubjectTypeMapper mapper;
-
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    mapping.putAll(
-      definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))
-    );
-  }
 
   @Override
   public NotifySubjectId convert(ConvertRequest request) {
@@ -60,4 +54,10 @@ public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService, 
     }
   }
 
+  @Override
+  public void initialize() {
+    mapping.putAll(
+      definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))
+    );
+  }
 }

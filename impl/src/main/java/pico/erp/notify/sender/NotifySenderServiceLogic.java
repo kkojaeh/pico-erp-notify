@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.val;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.notify.sender.NotifySenderRequests.SendGroupRequest;
+import pico.erp.shared.ApplicationInitializer;
 import pico.erp.shared.Public;
 
 @Service
 @Public
 @Validated
-public class NotifySenderServiceLogic implements NotifySenderService, InitializingBean {
+public class NotifySenderServiceLogic implements NotifySenderService, ApplicationInitializer {
 
   private final Map<NotifySenderId, NotifySenderDefinition> mapping = new HashMap<>();
 
@@ -26,13 +26,6 @@ public class NotifySenderServiceLogic implements NotifySenderService, Initializi
 
   @Autowired
   private NotifySenderMapper mapper;
-
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    mapping.putAll(
-      definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))
-    );
-  }
 
   @Override
   public boolean exists(NotifySenderId id) {
@@ -46,6 +39,13 @@ public class NotifySenderServiceLogic implements NotifySenderService, Initializi
     } else {
       throw new NotifySenderExceptions.NotFoundException();
     }
+  }
+
+  @Override
+  public void initialize() {
+    mapping.putAll(
+      definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))
+    );
   }
 
   @Override
