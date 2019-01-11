@@ -9,8 +9,10 @@ import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
+import pico.erp.audit.AuditConfiguration;
 import pico.erp.notify.NotifyApi.Roles;
 import pico.erp.shared.ApplicationId;
 import pico.erp.shared.ApplicationStarter;
@@ -73,6 +75,12 @@ public class NotifyApplication implements ApplicationStarter {
   @Override
   public pico.erp.shared.Application start(String... args) {
     return new ApplicationImpl(application().run(args));
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(AuditConfiguration.class)
+  public AuditConfiguration noOpAuditConfiguration() {
+    return AuditConfiguration.builder().build();
   }
 
 }
