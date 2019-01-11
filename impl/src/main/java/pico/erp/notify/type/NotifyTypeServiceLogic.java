@@ -19,7 +19,6 @@ import pico.erp.notify.message.NotifyMessageMustache;
 import pico.erp.notify.subject.type.NotifySubjectTypeService;
 import pico.erp.notify.type.NotifyTypeRequests.CompileRequest;
 import pico.erp.notify.type.NotifyTypeRequests.UpdateRequest;
-import pico.erp.shared.ApplicationInitializer;
 import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
@@ -28,7 +27,7 @@ import pico.erp.shared.event.EventPublisher;
 @Public
 @Transactional
 @Validated
-public class NotifyTypeServiceLogic implements NotifyTypeService, ApplicationInitializer {
+public class NotifyTypeServiceLogic implements NotifyTypeService {
 
   private final Map<NotifyTypeId, Function> contexts = new HashMap<>();
 
@@ -78,7 +77,6 @@ public class NotifyTypeServiceLogic implements NotifyTypeService, ApplicationIni
       .orElseThrow(NotifyTypeExceptions.NotFoundException::new);
   }
 
-  @Override
   public void initialize() {
     val targets = definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d));
     contexts.putAll(

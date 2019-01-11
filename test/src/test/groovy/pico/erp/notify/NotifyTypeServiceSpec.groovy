@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
-import pico.erp.notify.subject.type.NotifySubjectTypeId
 import pico.erp.notify.type.NotifyTypeExceptions
 import pico.erp.notify.type.NotifyTypeId
 import pico.erp.notify.type.NotifyTypeRequests
@@ -24,36 +23,11 @@ class NotifyTypeServiceSpec extends Specification {
 
   static def id = NotifyTypeId.from("test")
 
-  static def subjectTypeId = NotifySubjectTypeId.from("test")
-
   static def name = "테스트 타입"
 
   static def markdownTemplate = """{{name}} Hello"""
 
   static def key = "test-key"
-
-  /*@Bean
-  NotifyTypeDefinition testNotifyTypeDefinition() {
-    return NotifyTypeDefinition.Impl.builder()
-    .id(id)
-    .subjectTypeId(subjectTypeId)
-    .name(name)
-    .creator({
-      k -> [name: "테스트"]
-    })
-    .build()
-  }
-
-  @Bean
-  NotifySubjectTypeDefinition testNotifySubjectTypeDefinition() {
-    return NotifySubjectTypeDefinition.Impl.builder()
-      .id(subjectTypeId)
-      .name("테스트")
-      .converter({
-      k -> NotifySubjectId.from(subjectTypeId, k)
-    })
-      .build()
-  }*/
 
   @Autowired
   NotifyTypeService notifyTypeService
