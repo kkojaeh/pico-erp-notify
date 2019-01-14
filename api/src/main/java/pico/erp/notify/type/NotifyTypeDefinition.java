@@ -10,6 +10,8 @@ public interface NotifyTypeDefinition<K, C> {
 
   C createContext(K key);
 
+  K createKey(String key);
+
   NotifyTypeId getId();
 
   NotifySubjectTypeId getSubjectTypeId();
@@ -27,11 +29,18 @@ public interface NotifyTypeDefinition<K, C> {
 
     String name;
 
-    Function<K, C> creator;
+    Function<K, C> contextCreator;
+
+    Function<String, K> keyCreator;
 
     @Override
     public C createContext(K key) {
-      return creator.apply(key);
+      return contextCreator.apply(key);
+    }
+
+    @Override
+    public K createKey(String key) {
+      return keyCreator.apply(key);
     }
   }
 

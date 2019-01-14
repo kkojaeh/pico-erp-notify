@@ -5,7 +5,6 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -18,6 +17,7 @@ import pico.erp.notify.message.NotifyMessage;
 import pico.erp.notify.message.NotifyMessageMustache;
 import pico.erp.notify.subject.type.NotifySubjectTypeService;
 import pico.erp.notify.type.NotifyTypeRequests.CompileRequest;
+import pico.erp.notify.type.NotifyTypeRequests.TestCompileRequest;
 import pico.erp.notify.type.NotifyTypeRequests.UpdateRequest;
 import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
@@ -29,7 +29,7 @@ import pico.erp.shared.event.EventPublisher;
 @Validated
 public class NotifyTypeServiceLogic implements NotifyTypeService {
 
-  private final Map<NotifyTypeId, Function> contexts = new HashMap<>();
+  private final Map<NotifyTypeId, NotifyTypeDefinition> mapping = new HashMap<>();
 
   @Autowired
   private NotifyTypeRepository notifyTypeRepository;
@@ -59,29 +59,17 @@ public class NotifyTypeServiceLogic implements NotifyTypeService {
       throw new NotifyTypeExceptions.CannotCompileException();
     }
     String markdownTemplate = notifyType.getMarkdownTemplate();
-    val context = contexts.get(request.getId()).apply(request.getKey());
+    val context = mapping.get(request.getId()).createContext(request.getKey());
     val markdownMustache = mustacheFactory
       .compile(new StringReader(markdownTemplate), notifyType.getId().getValue());
     return new NotifyMessageMustache(markdownMustache, context);
   }
 
-  @Override
-  public boolean exists(NotifyTypeId id) {
-    return notifyTypeRepository.exists(id);
-  }
-
-  @Override
-  public NotifyTypeData get(NotifyTypeId id) {
-    return notifyTypeRepository.findBy(id)
-      .map(mapper::map)
-      .orElseThrow(NotifyTypeExceptions.NotFoundException::new);
-  }
-
   public void initialize() {
     val targets = definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d));
-    contexts.putAll(
+    mapping.putAll(
       definitions.stream()
-        .collect(Collectors.toMap(d -> d.getId(), d -> (k) -> d.createContext(k)))
+        .collect(Collectors.toMap(d -> d.getId(), d -> d))
     );
     notifyTypeRepository.findAll().forEach(notifyType -> targets.remove(notifyType.getId()));
     targets.values().forEach(definition -> {
@@ -96,6 +84,31 @@ public class NotifyTypeServiceLogic implements NotifyTypeService {
       eventPublisher.publishEvents(response.getEvents());
     });
 
+  }
+
+  @Override
+  public boolean exists(NotifyTypeId id) {
+    return notifyTypeRepository.exists(id);
+  }
+
+  @Override
+  public NotifyTypeData get(NotifyTypeId id) {
+    return notifyTypeRepository.findBy(id)
+      .map(mapper::map)
+      .orElseThrow(NotifyTypeExceptions.NotFoundException::new);
+  }
+
+  @Override
+  public NotifyMessage testCompile(TestCompileRequest request) {
+    val notifyType = notifyTypeRepository.findBy(request.getId())
+      .orElseThrow(NotifyTypeExceptions.NotFoundException::new);
+    String markdownTemplate = notifyType.getMarkdownTemplate();
+    val definition = mapping.get(request.getId());
+    val key = definition.createKey(request.getKey());
+    val context = definition.createContext(key);
+    val markdownMustache = mustacheFactory
+      .compile(new StringReader(markdownTemplate), notifyType.getId().getValue());
+    return new NotifyMessageMustache(markdownMustache, context);
   }
 
   @Override

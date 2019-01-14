@@ -31,8 +31,11 @@ class TestConfiguration {
       .id(typeId)
       .subjectTypeId(subjectTypeId)
       .name(typeName)
-      .creator({
+      .contextCreator({
       k -> [name: "테스트"]
+    })
+      .keyCreator({
+      k -> k
     })
       .build()
   }

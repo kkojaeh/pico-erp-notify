@@ -56,4 +56,20 @@ public interface NotifyTypeRequests {
 
   }
 
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
+  class TestCompileRequest {
+
+    @Valid
+    @NotNull
+    NotifyTypeId id;
+
+    @Valid
+    @NotNull
+    String key;
+
+  }
+
 }

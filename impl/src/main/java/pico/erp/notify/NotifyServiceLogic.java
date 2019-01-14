@@ -71,6 +71,9 @@ public class NotifyServiceLogic implements NotifyService {
   public void notify(NotifyUserRequest request) {
     val key = request.getKey();
     val type = notifyTypeService.get(request.getTypeId());
+    if (!type.isEnabled()) {
+      return;
+    }
     val subjectId = subjectTypeService.convert(
       new NotifySubjectTypeRequests.ConvertRequest(type.getSubjectTypeId(), key)
     );
@@ -85,6 +88,9 @@ public class NotifyServiceLogic implements NotifyService {
   public void notify(NotifyGroupRequest request) {
     val key = request.getKey();
     val type = notifyTypeService.get(request.getTypeId());
+    if (!type.isEnabled()) {
+      return;
+    }
     val subjectId = subjectTypeService.convert(
       new NotifySubjectTypeRequests.ConvertRequest(type.getSubjectTypeId(), key)
     );

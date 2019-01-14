@@ -8,6 +8,8 @@ public interface NotifyTypeService {
 
   NotifyMessage compile(@Valid @NotNull NotifyTypeRequests.CompileRequest request);
 
+  NotifyMessage testCompile(@Valid @NotNull NotifyTypeRequests.TestCompileRequest request);
+
   boolean exists(@Valid @NotNull NotifyTypeId id);
 
   NotifyTypeData get(@Valid @NotNull NotifyTypeId id);
