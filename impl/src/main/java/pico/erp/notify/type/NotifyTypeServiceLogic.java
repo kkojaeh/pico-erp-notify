@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -102,7 +103,8 @@ public class NotifyTypeServiceLogic implements NotifyTypeService {
   public NotifyMessage testCompile(TestCompileRequest request) {
     val notifyType = notifyTypeRepository.findBy(request.getId())
       .orElseThrow(NotifyTypeExceptions.NotFoundException::new);
-    String markdownTemplate = notifyType.getMarkdownTemplate();
+    val markdownTemplate = Optional.ofNullable(request.getMarkdownTemplate())
+      .orElse("");
     val definition = mapping.get(request.getId());
     val key = definition.createKey(request.getKey());
     val context = definition.createContext(key);

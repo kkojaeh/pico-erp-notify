@@ -70,6 +70,9 @@ public interface NotifyTypeRequests {
     @NotNull
     String key;
 
+    @Size(max = TypeDefinitions.CLOB_LENGTH)
+    String markdownTemplate;
+
   }
 
 }
