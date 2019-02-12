@@ -55,4 +55,5 @@ public class MattermostClient extends net.bis5.mattermost.client4.MattermostClie
       setMapper(mapper);
     }
   }
+
 }
