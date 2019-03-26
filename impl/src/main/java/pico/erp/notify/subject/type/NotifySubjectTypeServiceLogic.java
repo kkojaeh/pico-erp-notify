@@ -4,19 +4,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.SpringBootComponentReadyEvent;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.notify.subject.NotifySubjectId;
 import pico.erp.notify.subject.type.NotifySubjectTypeRequests.ConvertRequest;
-import pico.erp.shared.Public;
 
 @Service
-@Public
+@Give
 @Validated
-public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService {
+public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService,
+  ApplicationListener<SpringBootComponentReadyEvent> {
 
   private final Map<NotifySubjectTypeId, NotifySubjectTypeDefinition> mapping = new HashMap<>();
 
@@ -58,7 +61,14 @@ public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService {
       .collect(Collectors.toList());
   }
 
-  public void initialize() {
+  /*public void initialize() {
+    mapping.putAll(
+      definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))
+    );
+  }*/
+
+  @Override
+  public void onApplicationEvent(SpringBootComponentReadyEvent event) {
     mapping.putAll(
       definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))
     );

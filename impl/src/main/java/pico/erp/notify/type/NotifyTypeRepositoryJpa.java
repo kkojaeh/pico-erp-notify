@@ -33,12 +33,12 @@ public class NotifyTypeRepositoryJpa implements NotifyTypeRepository {
 
   @Override
   public void deleteBy(NotifyTypeId id) {
-    repository.delete(id);
+    repository.deleteById(id);
   }
 
   @Override
   public boolean exists(NotifyTypeId id) {
-    return repository.exists(id);
+    return repository.existsById(id);
   }
 
   @Override
@@ -49,13 +49,13 @@ public class NotifyTypeRepositoryJpa implements NotifyTypeRepository {
 
   @Override
   public Optional<NotifyType> findBy(NotifyTypeId id) {
-    return Optional.ofNullable(repository.findOne(id))
+    return repository.findById(id)
       .map(mapper::jpa);
   }
 
   @Override
   public void update(NotifyType notifyType) {
-    val entity = repository.findOne(notifyType.getId());
+    val entity = repository.findById(notifyType.getId()).get();
     mapper.pass(mapper.jpa(notifyType), entity);
     repository.save(entity);
   }

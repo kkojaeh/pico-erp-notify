@@ -1,27 +1,25 @@
 package pico.erp.notify;
 
+import kkojaeh.spring.boot.component.SpringBootComponentReadyEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import pico.erp.notify.subject.type.NotifySubjectTypeServiceLogic;
-import pico.erp.notify.type.NotifyTypeServiceLogic;
-import pico.erp.shared.ApplicationInitializer;
+import pico.erp.notify.type.NotifyTypeService;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Configuration
-public class NotifyInitializer implements ApplicationInitializer {
+public class NotifyInitializer implements ApplicationListener<SpringBootComponentReadyEvent> {
 
-  @Lazy
   @Autowired
-  private NotifyTypeServiceLogic notifyTypeService;
+  private NotifyTypeService notifyTypeService;
 
-  @Lazy
   @Autowired
   private NotifySubjectTypeServiceLogic notifySubjectTypeService;
 
   @Override
-  public void initialize() {
-    notifySubjectTypeService.initialize();
-    notifyTypeService.initialize();
+  public void onApplicationEvent(SpringBootComponentReadyEvent event) {
+    /*notifySubjectTypeService.initialize();
+    notifyTypeService.initialize();*/
   }
 }

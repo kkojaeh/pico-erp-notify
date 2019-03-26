@@ -32,24 +32,24 @@ public class NotifySubjectRepositoryJpa implements NotifySubjectRepository {
 
   @Override
   public void deleteBy(NotifySubjectId id) {
-    repository.delete(id);
+    repository.deleteById(id);
   }
 
   @Override
   public boolean exists(NotifySubjectId id) {
-    return repository.exists(id);
+    return repository.existsById(id);
   }
 
 
   @Override
   public Optional<NotifySubject> findBy(NotifySubjectId id) {
-    return Optional.ofNullable(repository.findOne(id))
+    return repository.findById(id)
       .map(mapper::jpa);
   }
 
   @Override
   public void update(NotifySubject notifySubject) {
-    val entity = repository.findOne(notifySubject.getId());
+    val entity = repository.findById(notifySubject.getId()).get();
     mapper.pass(mapper.jpa(notifySubject), entity);
     repository.save(entity);
   }

@@ -1,7 +1,6 @@
-banner:
-  location: classpath:notify/banner.txt
-
 spring:
+  banner:
+    location: classpath:notify/banner.txt
   application:
     name: pico-notify
   session:
@@ -17,6 +16,8 @@ spring:
     password: ${COMMENT_DATASOURCE_PASSWORD:${DATASOURCE_PASSWORD:null}}
     hikari:
       maximum-pool-size: 4
+  flyway:
+    enabled: false
   jpa:
     database: HSQL
     hibernate:
@@ -81,6 +82,3 @@ logging:
   level:
     org:
       springframework: INFO
-
-flyway:
-  enabled: false

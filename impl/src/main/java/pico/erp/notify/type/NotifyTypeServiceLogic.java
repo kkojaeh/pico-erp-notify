@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.SpringBootComponentReadyEvent;
+import kkojaeh.spring.boot.component.Take;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -20,15 +23,15 @@ import pico.erp.notify.subject.type.NotifySubjectTypeService;
 import pico.erp.notify.type.NotifyTypeRequests.CompileRequest;
 import pico.erp.notify.type.NotifyTypeRequests.TestCompileRequest;
 import pico.erp.notify.type.NotifyTypeRequests.UpdateRequest;
-import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
 @SuppressWarnings("Duplicates")
 @Service
-@Public
+@Give
 @Transactional
 @Validated
-public class NotifyTypeServiceLogic implements NotifyTypeService {
+public class NotifyTypeServiceLogic implements NotifyTypeService,
+  ApplicationListener<SpringBootComponentReadyEvent> {
 
   private final Map<NotifyTypeId, NotifyTypeDefinition> mapping = new HashMap<>();
 
@@ -41,8 +44,7 @@ public class NotifyTypeServiceLogic implements NotifyTypeService {
   @Autowired
   private NotifyTypeMapper mapper;
 
-  @Lazy
-  @Autowired
+  @Take
   private List<NotifyTypeDefinition> definitions;
 
   @Autowired
@@ -66,7 +68,7 @@ public class NotifyTypeServiceLogic implements NotifyTypeService {
     return new NotifyMessageMustache(markdownMustache, context);
   }
 
-  public void initialize() {
+  /*public void initialize() {
     val targets = definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d));
     mapping.putAll(
       definitions.stream()
@@ -85,7 +87,7 @@ public class NotifyTypeServiceLogic implements NotifyTypeService {
       eventPublisher.publishEvents(response.getEvents());
     });
 
-  }
+  }*/
 
   @Override
   public boolean exists(NotifyTypeId id) {
@@ -97,6 +99,27 @@ public class NotifyTypeServiceLogic implements NotifyTypeService {
     return notifyTypeRepository.findBy(id)
       .map(mapper::map)
       .orElseThrow(NotifyTypeExceptions.NotFoundException::new);
+  }
+
+  @Override
+  public void onApplicationEvent(SpringBootComponentReadyEvent event) {
+    val targets = definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d));
+    mapping.putAll(
+      definitions.stream()
+        .collect(Collectors.toMap(d -> d.getId(), d -> d))
+    );
+    notifyTypeRepository.findAll().forEach(notifyType -> targets.remove(notifyType.getId()));
+    targets.values().forEach(definition -> {
+      val notifyType = new NotifyType();
+      val request = NotifyTypeMessages.Create.Request.builder()
+        .id(definition.getId())
+        .subjectType(subjectTypeService.get(definition.getSubjectTypeId()))
+        .name(definition.getName())
+        .build();
+      val response = notifyType.apply(request);
+      notifyTypeRepository.create(notifyType);
+      eventPublisher.publishEvents(response.getEvents());
+    });
   }
 
   @Override
