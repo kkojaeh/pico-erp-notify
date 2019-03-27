@@ -1,4 +1,6 @@
 spring:
+  jmx:
+    default-domain: notify
   banner:
     location: classpath:notify/banner.txt
   application:
