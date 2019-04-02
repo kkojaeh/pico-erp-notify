@@ -25,6 +25,7 @@ public class NotifyMessageMustache implements NotifyMessage {
     }
     StringWriter writer = new StringWriter();
     markdown.execute(writer, context).flush();
-    return writer.toString();
+    markdownResult = writer.toString();
+    return markdownResult;
   }
 }

@@ -1,8 +1,9 @@
 package pico.erp.notify
 
+import kkojaeh.spring.boot.component.SpringBootTestComponent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
@@ -10,14 +11,16 @@ import pico.erp.notify.type.NotifyTypeExceptions
 import pico.erp.notify.type.NotifyTypeId
 import pico.erp.notify.type.NotifyTypeRequests
 import pico.erp.notify.type.NotifyTypeService
-import pico.erp.shared.IntegrationConfiguration
+import pico.erp.shared.TestParentApplication
+import pico.erp.user.UserApplication
 import spock.lang.Specification
 
-@SpringBootTest(classes = [IntegrationConfiguration])
+@SpringBootTest(classes = [NotifyApplication, TestConfiguration])
+@SpringBootTestComponent(parent = TestParentApplication, siblings = [UserApplication])
+@ComponentScan(useDefaultFilters = false)
 @Transactional
 @Rollback
 @ActiveProfiles("test")
-@Configuration
 class NotifyTypeServiceSpec extends Specification {
 
 

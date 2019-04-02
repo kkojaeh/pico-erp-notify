@@ -4,24 +4,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.SpringBootComponentReadyEvent;
+import kkojaeh.spring.boot.component.Take;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.notify.sender.NotifySenderRequests.SendGroupRequest;
-import pico.erp.shared.ApplicationInitializer;
-import pico.erp.shared.Public;
 
 @Service
-@Public
+@Give
 @Validated
-public class NotifySenderServiceLogic implements NotifySenderService, ApplicationInitializer {
+public class NotifySenderServiceLogic implements NotifySenderService,
+  ApplicationListener<SpringBootComponentReadyEvent> {
 
   private final Map<NotifySenderId, NotifySenderDefinition> mapping = new HashMap<>();
 
-  @Autowired
-  @Lazy
+  @Take(required = false)
   private List<NotifySenderDefinition> definitions;
 
   @Autowired
@@ -49,7 +50,7 @@ public class NotifySenderServiceLogic implements NotifySenderService, Applicatio
   }
 
   @Override
-  public void initialize() {
+  public void onApplicationEvent(SpringBootComponentReadyEvent event) {
     mapping.putAll(
       definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d))
     );

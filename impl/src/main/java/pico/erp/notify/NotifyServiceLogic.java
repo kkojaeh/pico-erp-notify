@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import kkojaeh.spring.boot.component.Give;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,11 @@ import pico.erp.notify.type.NotifyTypeData;
 import pico.erp.notify.type.NotifyTypeId;
 import pico.erp.notify.type.NotifyTypeRequests;
 import pico.erp.notify.type.NotifyTypeService;
-import pico.erp.shared.Public;
 import pico.erp.user.UserId;
 import pico.erp.user.group.GroupId;
 
 @Service
-@Public
+@Give
 @Transactional
 @Validated
 public class NotifyServiceLogic implements NotifyService {

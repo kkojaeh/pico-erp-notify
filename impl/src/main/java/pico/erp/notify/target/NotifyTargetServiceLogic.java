@@ -2,11 +2,11 @@ package pico.erp.notify.target;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
+import kkojaeh.spring.boot.component.Give;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.shared.Public;
 import pico.erp.user.UserExceptions;
 import pico.erp.user.UserId;
 import pico.erp.user.UserService;
@@ -15,7 +15,7 @@ import pico.erp.user.group.GroupQuery;
 import pico.erp.user.group.GroupService;
 
 @Service
-@Public
+@Give
 @Validated
 public class NotifyTargetServiceLogic implements NotifyTargetService {
 

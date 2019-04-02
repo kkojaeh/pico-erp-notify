@@ -1,6 +1,6 @@
 package pico.erp.notify.type;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class NotifyTypeView {
 
   boolean enabled;
 
-  OffsetDateTime createdDate;
+  LocalDateTime createdDate;
 
   @Data
   @NoArgsConstructor
