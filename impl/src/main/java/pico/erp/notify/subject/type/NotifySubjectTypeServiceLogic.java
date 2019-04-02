@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import kkojaeh.spring.boot.component.Give;
 import kkojaeh.spring.boot.component.SpringBootComponentReadyEvent;
+import kkojaeh.spring.boot.component.Take;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.notify.subject.NotifySubjectId;
@@ -23,8 +23,7 @@ public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService,
 
   private final Map<NotifySubjectTypeId, NotifySubjectTypeDefinition> mapping = new HashMap<>();
 
-  @Lazy
-  @Autowired
+  @Take(required = false)
   private List<NotifySubjectTypeDefinition> definitions;
 
   @Autowired

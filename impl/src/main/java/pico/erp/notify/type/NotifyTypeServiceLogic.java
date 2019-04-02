@@ -44,7 +44,7 @@ public class NotifyTypeServiceLogic implements NotifyTypeService,
   @Autowired
   private NotifyTypeMapper mapper;
 
-  @Take
+  @Take(required = false)
   private List<NotifyTypeDefinition> definitions;
 
   @Autowired
