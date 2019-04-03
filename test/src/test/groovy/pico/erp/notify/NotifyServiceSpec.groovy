@@ -13,13 +13,13 @@ import pico.erp.notify.subject.type.NotifySubjectTypeId
 import pico.erp.notify.type.NotifyTypeId
 import pico.erp.notify.type.NotifyTypeRequests
 import pico.erp.notify.type.NotifyTypeService
+import pico.erp.shared.ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier
 import pico.erp.shared.TestParentApplication
-import pico.erp.user.UserApplication
 import pico.erp.user.UserId
 import spock.lang.Specification
 
 @SpringBootTest(classes = [NotifyApplication, TestConfiguration])
-@SpringBootTestComponent(parent = TestParentApplication, siblings = [UserApplication])
+@SpringBootTestComponent(parent = TestParentApplication, siblingsSupplier = ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier.class)
 @ComponentScan(useDefaultFilters = false)
 @Transactional
 @Rollback

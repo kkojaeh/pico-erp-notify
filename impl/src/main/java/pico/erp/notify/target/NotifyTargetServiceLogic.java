@@ -2,7 +2,7 @@ package pico.erp.notify.target;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
-import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.ComponentBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import pico.erp.user.group.GroupQuery;
 import pico.erp.user.group.GroupService;
 
 @Service
-@Give
+@ComponentBean
 @Validated
 public class NotifyTargetServiceLogic implements NotifyTargetService {
 

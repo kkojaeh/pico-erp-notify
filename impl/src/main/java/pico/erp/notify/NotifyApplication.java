@@ -2,7 +2,7 @@ package pico.erp.notify;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
-import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.ComponentBean;
 import kkojaeh.spring.boot.component.SpringBootComponent;
 import kkojaeh.spring.boot.component.SpringBootComponentBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import pico.erp.ComponentDefinition;
 import pico.erp.notify.NotifyApi.Roles;
 import pico.erp.shared.SharedConfiguration;
 import pico.erp.shared.data.Role;
@@ -30,12 +31,17 @@ import pico.erp.shared.data.Role;
 @Import(value = {
   SharedConfiguration.class
 })
-public class NotifyApplication {
+public class NotifyApplication implements ComponentDefinition {
 
   public static void main(String[] args) {
     new SpringBootComponentBuilder()
       .component(NotifyApplication.class)
       .run(args);
+  }
+
+  @Override
+  public Class<?> getComponentClass() {
+    return NotifyApplication.class;
   }
 
   @Bean
@@ -45,7 +51,7 @@ public class NotifyApplication {
   }
 
   @Bean
-  @Give
+  @ComponentBean(host = false)
   public Role notifyManagerRole() {
     return Roles.NOTIFY_MANAGER;
   }

@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.ComponentAutowired;
+import kkojaeh.spring.boot.component.ComponentBean;
 import kkojaeh.spring.boot.component.SpringBootComponentReadyEvent;
-import kkojaeh.spring.boot.component.Take;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -16,14 +16,14 @@ import pico.erp.notify.subject.NotifySubjectId;
 import pico.erp.notify.subject.type.NotifySubjectTypeRequests.ConvertRequest;
 
 @Service
-@Give
+@ComponentBean
 @Validated
 public class NotifySubjectTypeServiceLogic implements NotifySubjectTypeService,
   ApplicationListener<SpringBootComponentReadyEvent> {
 
   private final Map<NotifySubjectTypeId, NotifySubjectTypeDefinition> mapping = new HashMap<>();
 
-  @Take(required = false)
+  @ComponentAutowired(required = false)
   private List<NotifySubjectTypeDefinition> definitions;
 
   @Autowired
